@@ -2,32 +2,41 @@
 #include <string>
 using namespace std;
 
+//jumlah buku maksimal yang dapat diinput
 const int bk = 50; 
 
+//struct menyimpan judul dan tahun terbit buku
 struct Buku {
     string jdlBuku;
     int thTerbit;
 };
 
+//array menyimpan daftar buku
 Buku dftBuku[bk];
+
+//array untuk menyimpan data buku yang asli sebelum diurutkan
 Buku dftBukuAsli[bk]; 
 int jmlBuku = 0;
 
+//fungsi untuk menyalin data
 void salinanData(Buku sumber[], Buku tujuan[], int jumlah) {
     for (int i = 0; i < jumlah; i++) {
         tujuan[i] = sumber[i];
     }
 }
 
+//fungsi untuk mereset data
 void resetData() {
     salinanData(dftBukuAsli, dftBuku, jmlBuku);
 }
 
+//fungsi untuk memasukkan data buku ke dalam array
 void inputan(Buku dftBuku[], int& jmlBuku) {
     int input;
     cout << "Masukkan jumlah buku yang ingin anda input: ";
     cin >> input;
 
+//jika jumlah buku yang diinput kurang dari 10 atau lebih dari 50, maka akan muncul pesan error
     if (input < 10 || input > 50) {
         cout << "Jumlah buku yang anda input harus lebih dari 10 dan kurang dari 50!"<<endl;
         return;
@@ -35,6 +44,7 @@ void inputan(Buku dftBuku[], int& jmlBuku) {
 
     cin.ignore();
     
+    //input data buku
     for (int i = 0; i < input; i++) {
         cout << "Masukkan judul buku " << (jmlBuku + 1) << ": ";
         getline(cin, dftBuku[jmlBuku].jdlBuku);
@@ -44,20 +54,25 @@ void inputan(Buku dftBuku[], int& jmlBuku) {
         jmlBuku++;
     }
 
+    //menyalin data buku ke array dftBukuAsli
     if (jmlBuku == input) {
         salinanData(dftBuku, dftBukuAsli, jmlBuku);
     }
 }
 
+//fungsi untuk menampilkan daftar buku
 void tampilkan(const Buku dftBuku[], int jmlBuku) {
-
     for (int i = 0; i < jmlBuku; i++) {
         cout << dftBuku[i].jdlBuku << " - " << dftBuku[i].thTerbit << endl;
     }
 }
 
+//fungsi untuk menyorting data buku dengan bubble sort
 void bubble(Buku dftBuku[], int jmlBuku) {
+
+    //mengembalikan data buku ke kondisi semula sebelum diurutkan
     resetData();
+
     for (int i = 0; i < jmlBuku - 1; i++) {
         for (int u = 0; u < jmlBuku - i - 1; u++) {
             if (dftBuku[u].thTerbit > dftBuku[u + 1].thTerbit) {
@@ -67,10 +82,12 @@ void bubble(Buku dftBuku[], int jmlBuku) {
     }
 }
 
+//fungsi untuk menyorting data buku dengan quick sort
 void quick(Buku dftBuku[], int awal, int akhir) {
     if (awal >= akhir) return;
-
     int low = awal, high = akhir;
+
+    //memilih pivot di tengah
     int pivot = dftBuku[(awal + akhir) / 2].thTerbit;
 
     do {
@@ -84,10 +101,12 @@ void quick(Buku dftBuku[], int awal, int akhir) {
         }
     } while (low <= high);
 
+//rekursif untuk menyortir bagian kiri dan kanan pivot
    quick(dftBuku, awal, high);
    quick(dftBuku, low, akhir);
 }
 
+//fungsi untuk mencari tahun terbit buku dengan sequential search
 int sequential(const Buku dftBuku[], int jmlBuku, int tahun) {
     for (int i = 0; i < jmlBuku; i++) {
         if (dftBuku[i].thTerbit == tahun) {
@@ -97,6 +116,7 @@ int sequential(const Buku dftBuku[], int jmlBuku, int tahun) {
     return -1;
 }
 
+//fungsi untuk mencari tahun terbit buku dengan binary search
 int binary(const Buku dftBuku[], int low, int high, int tahun) {
     while (low <= high) {
         int mid = low + (high - low) / 2;
@@ -129,6 +149,7 @@ int main() {
         cin >> menu;
         cout<<endl;
 
+//switch case untuk memilih menu
         switch (menu) {
             case 1:
                 cout<<"---------- Input Data Buku ----------"<<endl;
@@ -208,6 +229,5 @@ int main() {
                 cout << "Pilihan tidak valid."<<endl;
         }
     } while (menu != 7);
-
     return 0;
 }
